@@ -33,31 +33,32 @@ datumTable: [
 
 
 
-```
-calculate constants used for doing conversions using a given map datum
-```
-setDatum: function (index) {
+def setDatum(index):
+    '''
+    calculate constants used for doing conversions using a given map datum
+    '''
     var datum = this.datumTable[index];
     this.a = datum.eqRad;
     this.f = 1 / datum.flat;
     this.b = this.a * (1 - this.f);   # polar radius
     this.e = Math.sqrt(1 - Math.pow(this.b, 2) / Math.pow(this.a, 2));
     this.e0 = this.e / Math.sqrt(1 - Math.pow(this.e, 1));
-},
 
 
-```
- given a lat/lng pair, returns both global UTM and NATO UTM in the following form:
- utm:
- {
-     global: { northing: n, easting: e, zone: z, southern: x },
-     nato: { northing: n, easting: e, latzone: z0, lngzone: z1, digraph: xx }
- }
 
-this function assumes that all data validation has been performed prior to calling
-it.
-```
-latLngToUtm: function (lat, lngd) {
+
+def latLngToUtm(lat, lngd):
+    '''
+    given a lat/lng pair, returns both global UTM and NATO UTM in the following form:
+    utm:
+    {
+    global: { northing: n, easting: e, zone: z, southern: x },
+    nato: { northing: n, easting: e, latzone: z0, lngzone: z1, digraph: xx }
+    }
+
+    this function assumes that all data validation has been performed prior to calling
+    it.
+    '''
     var phi = lat * this.drad;                              # convert latitude to radians
     var lng = lngd * this.drad;                             # convert longitude to radians
     var utmz = 1 + Math.floor((lngd + 180) / 6);            # longitude to utm zone
@@ -120,21 +121,21 @@ latLngToUtm: function (lat, lngd) {
     }
 
     return rv;
-},
 
 
 
-```
- convert a set of global UTM coordinates to lat/lng returned as follows
- { lat: y, lng: x }
 
- inputs:
-      x: easting
-      y: northing
-      utmz: utm zone
-      southern: bool indicating coords are in southern hemisphere
-```
-utmToLatLng: function (x, y, utmz, southern) {
+def utmToLatLng(x, y, utmz, southern):
+    '''
+    Convert a set of global UTM coordinates to lat/lng returned as follows
+    { lat: y, lng: x }
+
+    inputs:
+    x: easting
+    y: northing
+    utmz: utm zone
+    southern: bool indicating coords are in southern hemisphere
+    '''
     var esq = (1 - (this.b / this.a) * (this.b / this.a));
     var e0sq = this.e * this.e / (1 - Math.pow(this.e, 2));
     var zcm = 3 + 6 * (utmz - 1) - 180;                         # Central meridian of zone
@@ -164,45 +165,43 @@ utmToLatLng: function (x, y, utmz, southern) {
     lng = lngd = zcm + lng / this.drad;
 
     return { lat: lat, lng: lng };
-},
 
 
 
 
-```
- takes a set of NATO style UTM coordinates and converts them to a lat/lng pair.
+def natoToLatLng(utme, utmn, utmz, latz, digraph):
+    '''
+    takes a set of NATO style UTM coordinates and converts them to a lat/lng pair.
 
- { lat: y, lng: x }
+    { lat: y, lng: x }
 
- inputs:
-     utme: easting
-     utmn: northing
-     utmz: longitudinal zone
-     latz: character representing latitudinal zone
-     digraph: string representing grid
-```
-natoToLatLng: function (utme, utmn, utmz, latz, digraph) {
+    inputs:
+    utme: easting
+    utmn: northing
+    utmz: longitudinal zone
+    latz: character representing latitudinal zone
+    digraph: string representing grid
+    '''
     var coords = this.natoToUtm(utme, utmn, utmz, latz, digraph);
     return this.utmToLatLng(coords.easting, coords.northing, coords.zone, coords.southern);
-},
 
 
 
-```
- convert a set of nato coordinates to the global system.  returns a structure
+def natoToUtm(utme, utmn, utmz, latz, digraph):
+    '''
+    convert a set of nato coordinates to the global system.  returns a structure
 
- { norhting: y, easting: x, zone: zone, southern: hemisphere }
+    { norhting: y, easting: x, zone: zone, southern: hemisphere }
 
- inputs:
-      utme: easting
-      utmn: northing
-      utmz: longitudinal zone
-      latz: character representing latitudinal zone
-      digraph: string representing grid
+    inputs:
+    utme: easting
+    utmn: northing
+    utmz: longitudinal zone
+    latz: character representing latitudinal zone
+    digraph: string representing grid
 
- checks for digraph validity
-```
-natoToUtm: function (utme, utmn, utmz, latz, digraph) {
+    checks for digraph validity
+    '''
     latz = latz.toUpperCase();
     digraph = digraph.toUpperCase();
 
@@ -264,22 +263,22 @@ natoToUtm: function (utme, utmn, utmz, latz, digraph) {
     var southern = nbase < 10000000;
 
     return { northing: y, easting: x, zone: utmz, southern: southern };
-},
 
 
 
-```
- returns a set of nato coordinates from a set of global UTM coordinates
- return is an object with the following structure:
-      { northing: n, easting: e, latZone: z0, lngZone: z1, digraph: xx }
 
- inputs:
-      x: easting
-      y: northing
-      utmz: the utm zone
-      southern: hemisphere indicator
-```
-utmToNato: function (x, y, utmz, southern) {
+def utmToNato(x, y, utmz, southern):
+    '''
+    returns a set of nato coordinates from a set of global UTM coordinates
+    return is an object with the following structure:
+    { northing: n, easting: e, latZone: z0, lngZone: z1, digraph: xx }
+
+    inputs:
+    x: easting
+    y: northing
+    utmz: the utm zone
+    southern: hemisphere indicator
+    '''
     var esq = (1 - (this.b / this.a) * (this.b / this.a));
     var e0sq = this.e * this.e / (1 - Math.pow(this.e, 2));
     var e1 = (1 - Math.sqrt(1 - Math.pow(this.e, 2))) / (1 + Math.sqrt(1 - Math.pow(this.e, 2)));
@@ -326,22 +325,19 @@ utmToNato: function (x, y, utmz, southern) {
         lngZone: utmz,
         digraph: digraph
     }
-},
 
 
 
-```
- create a nato grid digraph.
+def makeDigraph(x, y, utmz):
+    '''
+    create a nato grid digraph.
 
- inputs:
-      x: easting
-      y: northing
-      utmz: utm zone
-```
-makeDigraph: function (x, y, utmz) {
-    #
+    inputs:
+    x: easting
+    y: northing
+    utmz: utm zone
+    '''
     # first get the east digraph letter
-    #
     var letter = Math.floor((utmz - 1) * 8 + (x) / 100000);
     letter = letter - 24 * Math.floor(letter / 24) - 1;
     var digraph = this.digraphLettersE.charAt(letter);
@@ -352,4 +348,3 @@ makeDigraph: function (x, y, utmz) {
     digraph = digraph + this.digraphLettersN.charAt(letter);
 
     return digraph;
-}
