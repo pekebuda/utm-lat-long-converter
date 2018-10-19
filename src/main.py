@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, sin, cos, tan
 
 
 class GeoCon:
@@ -88,16 +88,16 @@ Main class
         # zone Y-Z
         elif (lat > 84): latz = 23
 
-        N = self.a / sqrt(1 - (self.e * Math.sin(phi))**2)
-        T = Math.tan(phi)**2
-        C = e0sq * Math.cos(phi)**2
-        A = (lngd - zcm) * self.drad * Math.cos(phi)
+        N = self.a / sqrt(1 - (self.e * sin(phi))**2)
+        T = tan(phi)**2
+        C = e0sq * cos(phi)**2
+        A = (lngd - zcm) * self.drad * cos(phi)
 
         # calculate M (USGS style)
         M = phi * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256)))
-        M = M - Math.sin(2 * phi) * (esq * (3 / 8 + esq * (3 / 32 + 45 * esq / 1024)))
-        M = M + Math.sin(4 * phi) * (esq * esq * (15 / 256 + esq * 45 / 1024))
-        M = M - Math.sin(6 * phi) * (esq * esq * esq * (35 / 3072))
+        M = M - sin(2 * phi) * (esq * (3 / 8 + esq * (3 / 32 + 45 * esq / 1024)))
+        M = M + sin(4 * phi) * (esq * esq * (15 / 256 + esq * 45 / 1024))
+        M = M - sin(6 * phi) * (esq * esq * esq * (35 / 3072))
         M = M * self.a                                     #Arc length along standard meridian
 
         M0 = 0   # if another point of origin is used than the equator
@@ -108,7 +108,7 @@ Main class
         x = x + 500000 # standard easting
 
         # now the northing
-        y = self.k0 * (M - M0 + N * Math.tan(phi) * (A * A * (1 / 2 + A * A * ((5 - T + 9 * C + 4 * C * C) / 24 + A * A * (61 - 58 * T + T * T + 600 * C - 330 * e0sq) / 720))))   # first from the equator
+        y = self.k0 * (M - M0 + N * tan(phi) * (A * A * (1 / 2 + A * A * ((5 - T + 9 * C + 4 * C * C) / 24 + A * A * (61 - 58 * T + T * T + 600 * C - 330 * e0sq) / 720))))   # first from the equator
         yg = y + 10000000  #yg = y global, from S. Pole
         if (y < 0): y = 10000000 + y   # add in false northing if south of the equator
 
@@ -156,19 +156,19 @@ Main class
         else: M = M0 + (y - 10000000) / self.k
 
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
-        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu)   #Footprint Latitude
-        phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512)
-        C1 = e0sq * Math.cos(phi1)**2
-        T1 = Math.tan(phi1)**2
-        N1 = self.a / sqrt(1 - (self.e * Math.sin(phi1))**2)
-        R1 = N1 * (1 - self.e**2) / (1 - ((self.e * Math.sin(phi1))**2))
+        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu)   #Footprint Latitude
+        phi1 = phi1 + e1 * e1 * e1 * (sin(6 * mu) * 151 / 96 + e1 * sin(8 * mu) * 1097 / 512)
+        C1 = e0sq * cos(phi1)**2
+        T1 = tan(phi1)**2
+        N1 = self.a / sqrt(1 - (self.e * sin(phi1))**2)
+        R1 = N1 * (1 - self.e**2) / (1 - ((self.e * sin(phi1))**2))
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
         phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720
-        phi = phi1 - (N1 * Math.tan(phi1) / R1) * phi
+        phi = phi1 - (N1 * tan(phi1) / R1) * phi
 
         lat = Math.floor(1000000 * phi / self.drad) / 1000000
-        lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / Math.cos(phi1)
+        lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / cos(phi1)
         lng = lngd = zcm + lng / self.drad
 
         return { lat: lat, lng: lng }
@@ -286,16 +286,16 @@ Main class
 
         # calculate the latitude so that we can derive the latitude zone
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
-        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu);   //Footprint Latitude
-        phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512);
-        C1 = e0sq * Math.cos(phi1)**2
-        T1 = Math.tan(phi1)**2
-        N1 = self.a / sqrt(1 - (self.e * Math.sin(phi1))**2)
-        R1 = N1 * (1 - self.e**2) / (1 - (self.e * Math.sin(phi1))**2)
+        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu);   //Footprint Latitude
+        phi1 = phi1 + e1 * e1 * e1 * (sin(6 * mu) * 151 / 96 + e1 * sin(8 * mu) * 1097 / 512);
+        C1 = e0sq * cos(phi1)**2
+        T1 = tan(phi1)**2
+        N1 = self.a / sqrt(1 - (self.e * sin(phi1))**2)
+        R1 = N1 * (1 - self.e**2) / (1 - (self.e * sin(phi1))**2)
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
         phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720;        }
-        phi = phi1 - (N1 * Math.tan(phi1) / R1) * phi
+        phi = phi1 - (N1 * tan(phi1) / R1) * phi
         lat = Math.floor(1000000 * phi / self.drad) / 1000000        }
 
         # convert latitude to latitude zone for NATO
