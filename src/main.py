@@ -245,7 +245,7 @@ Main class
 
         lowLetter = floor(100 + 1.11 * latBandLow)
         highLetter = round(100 + 1.11 * latBandHigh)
-        latBandLetters = null
+        latBandLetters = None
         if (utmz / 2 == floor(utmz / 2)):
             latBandLetters = self.digraphLettersAll.slice(lowLetter + 5, highLetter + 5)
         else:
