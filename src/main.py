@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, tan, fllor
+from math import sqrt, sin, cos, tan, floor, pi
 
 
 class GeoCon:
@@ -9,7 +9,7 @@ Main class
     #constants used in calculations
     k = 1
     k0 = 0.9996
-    drad = Math.PI / 180
+    drad = pi / 180
     digraphLettersE = "ABCDEFGHJKLMNPQRSTUVWXYZ"
     digraphLettersN = "ABCDEFGHJKLMNPQRSTUV"
     digraphLettersAll = "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUV"
