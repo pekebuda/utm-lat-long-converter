@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class GeoCon:
 '''
 Main class
@@ -49,8 +52,8 @@ Main class
         self.a = datum.eqRad
         self.f = 1 / datum.flat
         self.b = self.a * (1 - self.f)   # polar radius
-        self.e = Math.sqrt(1 - self.b**2 / self.a**2)
-        self.e0 = self.e / Math.sqrt(1 - self.e**1)
+        self.e = sqrt(1 - self.b**2 / self.a**2)
+        self.e0 = self.e / sqrt(1 - self.e**1)
 
 
 
@@ -85,7 +88,7 @@ Main class
         # zone Y-Z
         elif (lat > 84): latz = 23
 
-        N = self.a / Math.sqrt(1 - (self.e * Math.sin(phi))**2)
+        N = self.a / sqrt(1 - (self.e * Math.sin(phi))**2)
         T = Math.tan(phi)**2
         C = e0sq * Math.cos(phi)**2
         A = (lngd - zcm) * self.drad * Math.cos(phi)
@@ -145,7 +148,7 @@ Main class
         esq = (1 - (self.b / self.a) * (self.b / self.a))
         e0sq = self.e * self.e / (1 - self.e**2)
         zcm = 3 + 6 * (utmz - 1) - 180                         # Central meridian of zone
-        e1 = (1 - Math.sqrt(1 - self.e**2)) / (1 + Math.sqrt(1 - self.e**2))
+        e1 = (1 - sqrt(1 - self.e**2)) / (1 + sqrt(1 - self.e**2))
         M0 = 0
         M = 0
 
@@ -157,7 +160,7 @@ Main class
         phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512)
         C1 = e0sq * Math.cos(phi1)**2
         T1 = Math.tan(phi1)**2
-        N1 = self.a / Math.sqrt(1 - (self.e * Math.sin(phi1))**2)
+        N1 = self.a / sqrt(1 - (self.e * Math.sin(phi1))**2)
         R1 = N1 * (1 - self.e**2) / (1 - ((self.e * Math.sin(phi1))**2))
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
@@ -275,7 +278,7 @@ Main class
         '''
         esq = (1 - (self.b / self.a) * (self.b / self.a))
         e0sq = self.e * self.e / (1 - self.e**2)
-        e1 = (1 - Math.sqrt(1 - self.e**2)) / (1 + Math.sqrt(1 - self.e**2))
+        e1 = (1 - sqrt(1 - self.e**2)) / (1 + sqrt(1 - self.e**2))
         M0 = 0
 
         if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
@@ -287,7 +290,7 @@ Main class
         phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512);
         C1 = e0sq * Math.cos(phi1)**2
         T1 = Math.tan(phi1)**2
-        N1 = self.a / Math.sqrt(1 - (self.e * Math.sin(phi1))**2)
+        N1 = self.a / sqrt(1 - (self.e * Math.sin(phi1))**2)
         R1 = N1 * (1 - self.e**2) / (1 - (self.e * Math.sin(phi1))**2)
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
