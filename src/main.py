@@ -79,9 +79,9 @@ Main class
 
         # convert latitude to latitude zone for nato
         # zones C-W in this range
-        if (lat > -80 && lat < 72): latz = Math.floor((lat + 80) / 8) + 2
+        if (lat > -80 and lat < 72): latz = Math.floor((lat + 80) / 8) + 2
         # zone X
-        elif (lat > 72 && lat < 84): latz = 21
+        elif (lat > 72 and lat < 84): latz = 21
         # zone Y-Z
         elif (lat > 84): latz = 23
 
@@ -149,7 +149,7 @@ Main class
         M0 = 0
         M = 0
 
-        if (!southern): M = M0 + y / self.k0    # Arc length along standard meridian.
+        if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
         else: M = M0 + (y - 10000000) / self.k
 
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
@@ -213,16 +213,16 @@ Main class
         nltr = digraph.charAt(1)
 
         # make sure the digraph is consistent
-        if (nltr == "I" || eltr == "O")
+        if (nltr == "I" or eltr == "O"):
             throw "I and O are not legal digraph characters"
 
-        if (nltr == "W" || nltr == "X" || nltr == "Y" || nltr == "Z")
+        if (nltr == "W" or nltr == "X" or nltr == "Y" or nltr == "Z"):
             throw "W, X, Y and Z are not legal second characters in a digraph"
 
         eidx = self.digraphLettersE.indexOf(eltr)
         nidx = self.digraphLettersN.indexOf(nltr)
 
-        if (utmz / 2 == Math.floor(utmz / 2)) nidx -= 5  # correction for even numbered zones
+        if (utmz / 2 == Math.floor(utmz / 2)): nidx -= 5  # correction for even numbered zones
 
         ebase = 100000*(1 + eidx - 8 * Math.floor(eidx / 8))
 
@@ -278,7 +278,7 @@ Main class
         e1 = (1 - Math.sqrt(1 - Math.pow(self.e, 2))) / (1 + Math.sqrt(1 - Math.pow(self.e, 2)))
         M0 = 0
 
-        if (!southern): M = M0 + y / self.k0    # Arc length along standard meridian.
+        if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
         else: M = M0 + (y - 10000000) / self.k
 
         # calculate the latitude so that we can derive the latitude zone
@@ -296,9 +296,9 @@ Main class
         lat = Math.floor(1000000 * phi / self.drad) / 1000000        }
 
         # convert latitude to latitude zone for NATO
-        if (lat > -80 && lat < 72): latz = Math.floor((lat + 80) / 8) + 2;  # zones C-W in this range
-        elif (lat > 72 && lat < 84): latz = 21;                             # zone X
-        elif (lat > 84) latz = 23;                                          # zone Y-Z
+        if (lat > -80 and lat < 72): latz = Math.floor((lat + 80) / 8) + 2;  # zones C-W in this range
+        elif (lat > 72 and lat < 84): latz = 21;                             # zone X
+        elif (lat > 84): latz = 23;                                          # zone Y-Z
 
         digraph = self.makeDigraph(x, y, utmz)
         x = Math.round(10 * (x - 100000 * Math.floor(x / 100000))) / 10
