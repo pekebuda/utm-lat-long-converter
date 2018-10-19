@@ -1,4 +1,4 @@
-from math import sqrt, sin, cos, tan
+from math import sqrt, sin, cos, tan, fllor
 
 
 class GeoCon:
@@ -73,7 +73,7 @@ Main class
         '''
         phi = lat * self.drad                              # convert latitude to radians
         lng = lngd * self.drad                             # convert longitude to radians
-        utmz = 1 + Math.floor((lngd + 180) / 6)            # longitude to utm zone
+        utmz = 1 + floor((lngd + 180) / 6)            # longitude to utm zone
         zcm = 3 + 6 * (utmz - 1) - 180                     # central meridian of a zone
         latz = 0                                           # this gives us zone A-B for below 80S
         esq = (1 - (self.b / self.a) * (self.b / self.a))
@@ -82,7 +82,7 @@ Main class
 
         # convert latitude to latitude zone for nato
         # zones C-W in this range
-        if (lat > -80 and lat < 72): latz = Math.floor((lat + 80) / 8) + 2
+        if (lat > -80 and lat < 72): latz = floor((lat + 80) / 8) + 2
         # zone X
         elif (lat > 72 and lat < 84): latz = 21
         # zone Y-Z
@@ -115,14 +115,14 @@ Main class
         digraph = self.makeDigraph(x, y, utmz)
         rv = {
             global: {
-                easting: Math.round(10*(x))/10,
-                northing: Math.round(10*y)/10,
+                easting: round(10*(x))/10,
+                northing: round(10*y)/10,
                 zone: utmz,
                 southern: phi < 0
             },
             nato: {
-                easting: Math.round(10*(x-100000*Math.floor(x/100000)))/10,
-                northing: Math.round(10*(y-100000*Math.floor(y/100000)))/10,
+                easting: round(10*(x-100000*floor(x/100000)))/10,
+                northing: round(10*(y-100000*floor(y/100000)))/10,
                 latZone: self.digraphLettersN[latz],
                 lngZone: utmz,
                 digraph: digraph
@@ -167,7 +167,7 @@ Main class
         phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720
         phi = phi1 - (N1 * tan(phi1) / R1) * phi
 
-        lat = Math.floor(1000000 * phi / self.drad) / 1000000
+        lat = floor(1000000 * phi / self.drad) / 1000000
         lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / cos(phi1)
         lng = lngd = zcm + lng / self.drad
 
@@ -225,9 +225,9 @@ Main class
         eidx = self.digraphLettersE.indexOf(eltr)
         nidx = self.digraphLettersN.indexOf(nltr)
 
-        if (utmz / 2 == Math.floor(utmz / 2)): nidx -= 5  # correction for even numbered zones
+        if (utmz / 2 == floor(utmz / 2)): nidx -= 5  # correction for even numbered zones
 
-        ebase = 100000*(1 + eidx - 8 * Math.floor(eidx / 8))
+        ebase = 100000*(1 + eidx - 8 * floor(eidx / 8))
 
         latBand = self.digraphLettersE.indexOf(latz)
         latBandLow = 8 * latBand - 96
@@ -243,10 +243,10 @@ Main class
             latBandLow = 84
             latBandHigh = 90
 
-        lowLetter = Math.floor(100 + 1.11 * latBandLow)
-        highLetter = Math.round(100 + 1.11 * latBandHigh)
+        lowLetter = floor(100 + 1.11 * latBandLow)
+        highLetter = round(100 + 1.11 * latBandHigh)
         latBandLetters = null
-        if (utmz / 2 == Math.floor(utmz / 2)):
+        if (utmz / 2 == floor(utmz / 2)):
             latBandLetters = self.digraphLettersAll.slice(lowLetter + 5, highLetter + 5)
         else:
             latBandLetters = self.digraphLettersAll.slice(lowLetter, highLetter)
@@ -296,16 +296,16 @@ Main class
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
         phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720;        }
         phi = phi1 - (N1 * tan(phi1) / R1) * phi
-        lat = Math.floor(1000000 * phi / self.drad) / 1000000        }
+        lat = floor(1000000 * phi / self.drad) / 1000000        }
 
         # convert latitude to latitude zone for NATO
-        if (lat > -80 and lat < 72): latz = Math.floor((lat + 80) / 8) + 2;  # zones C-W in this range
-        elif (lat > 72 and lat < 84): latz = 21;                             # zone X
-        elif (lat > 84): latz = 23;                                          # zone Y-Z
+        if (lat > -80 and lat < 72): latz = floor((lat + 80) / 8) + 2;  # zones C-W in this range
+        elif (lat > 72 and lat < 84): latz = 21;                        # zone X
+        elif (lat > 84): latz = 23;                                     # zone Y-Z
 
         digraph = self.makeDigraph(x, y, utmz)
-        x = Math.round(10 * (x - 100000 * Math.floor(x / 100000))) / 10
-        y = Math.round(10 * (y - 100000 * Math.floor(y / 100000))) / 10
+        x = round(10 * (x - 100000 * floor(x / 100000))) / 10
+        y = round(10 * (y - 100000 * floor(y / 100000))) / 10
 
         return {
             easting: x,
@@ -327,13 +327,13 @@ Main class
             utmz: utm zone
         '''
         # first get the east digraph letter
-        letter = Math.floor((utmz - 1) * 8 + (x) / 100000)
-        letter = letter - 24 * Math.floor(letter / 24) - 1
+        letter = floor((utmz - 1) * 8 + (x) / 100000)
+        letter = letter - 24 * floor(letter / 24) - 1
         digraph = self.digraphLettersE.charAt(letter)
 
-        letter = Math.floor(y / 100000)
-        if (utmz / 2 == Math.floor(utmz / 2)): letter = letter + 5
-        letter = letter - 20 * Math.floor(letter / 20)
+        letter = floor(y / 100000)
+        if (utmz / 2 == floor(utmz / 2)): letter = letter + 5
+        letter = letter - 20 * floor(letter / 20)
         digraph = digraph + self.digraphLettersN.charAt(letter)
 
         return digraph
