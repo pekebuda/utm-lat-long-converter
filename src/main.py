@@ -49,8 +49,8 @@ Main class
         self.a = datum.eqRad
         self.f = 1 / datum.flat
         self.b = self.a * (1 - self.f)   # polar radius
-        self.e = Math.sqrt(1 - Math.pow(self.b, 2) / Math.pow(self.a, 2))
-        self.e0 = self.e / Math.sqrt(1 - Math.pow(self.e, 1))
+        self.e = Math.sqrt(1 - self.b**2 / self.a**2)
+        self.e0 = self.e / Math.sqrt(1 - self.e**1)
 
 
 
@@ -74,7 +74,7 @@ Main class
         zcm = 3 + 6 * (utmz - 1) - 180                     # central meridian of a zone
         latz = 0                                           # this gives us zone A-B for below 80S
         esq = (1 - (self.b / self.a) * (self.b / self.a))
-        e0sq = self.e * self.e / (1 - Math.pow(self.e, 2))
+        e0sq = self.e * self.e / (1 - self.e**2)
         M = 0
 
         # convert latitude to latitude zone for nato
@@ -85,9 +85,9 @@ Main class
         # zone Y-Z
         elif (lat > 84): latz = 23
 
-        N = self.a / Math.sqrt(1 - Math.pow(self.e * Math.sin(phi), 2))
-        T = Math.pow(Math.tan(phi), 2)
-        C = e0sq * Math.pow(Math.cos(phi), 2)
+        N = self.a / Math.sqrt(1 - (self.e * Math.sin(phi))**2)
+        T = Math.tan(phi)**2
+        C = e0sq * Math.cos(phi)**2
         A = (lngd - zcm) * self.drad * Math.cos(phi)
 
         # calculate M (USGS style)
@@ -143,9 +143,9 @@ Main class
         southern: bool indicating coords are in southern hemisphere
         '''
         esq = (1 - (self.b / self.a) * (self.b / self.a))
-        e0sq = self.e * self.e / (1 - Math.pow(self.e, 2))
+        e0sq = self.e * self.e / (1 - self.e**2)
         zcm = 3 + 6 * (utmz - 1) - 180                         # Central meridian of zone
-        e1 = (1 - Math.sqrt(1 - Math.pow(self.e, 2))) / (1 + Math.sqrt(1 - Math.pow(self.e, 2)))
+        e1 = (1 - Math.sqrt(1 - self.e**2)) / (1 + Math.sqrt(1 - self.e**2))
         M0 = 0
         M = 0
 
@@ -155,13 +155,13 @@ Main class
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
         phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu)   #Footprint Latitude
         phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512)
-        C1 = e0sq * Math.pow(Math.cos(phi1), 2)
-        T1 = Math.pow(Math.tan(phi1), 2)
-        N1 = self.a / Math.sqrt(1 - Math.pow(self.e * Math.sin(phi1), 2))
-        R1 = N1 * (1 - Math.pow(self.e, 2)) / (1 - Math.pow(self.e * Math.sin(phi1), 2))
+        C1 = e0sq * Math.cos(phi1)**2
+        T1 = Math.tan(phi1)**2
+        N1 = self.a / Math.sqrt(1 - (self.e * Math.sin(phi1))**2)
+        R1 = N1 * (1 - self.e**2) / (1 - ((self.e * Math.sin(phi1))**2))
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
-        phi = phi + Math.pow(D, 6) * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720
+        phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720
         phi = phi1 - (N1 * Math.tan(phi1) / R1) * phi
 
         lat = Math.floor(1000000 * phi / self.drad) / 1000000
@@ -274,8 +274,8 @@ Main class
             southern: hemisphere indicator
         '''
         esq = (1 - (self.b / self.a) * (self.b / self.a))
-        e0sq = self.e * self.e / (1 - Math.pow(self.e, 2))
-        e1 = (1 - Math.sqrt(1 - Math.pow(self.e, 2))) / (1 + Math.sqrt(1 - Math.pow(self.e, 2)))
+        e0sq = self.e * self.e / (1 - self.e**2)
+        e1 = (1 - Math.sqrt(1 - self.e**2)) / (1 + Math.sqrt(1 - self.e**2))
         M0 = 0
 
         if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
@@ -285,13 +285,13 @@ Main class
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
         phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * Math.sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * Math.sin(4 * mu);   //Footprint Latitude
         phi1 = phi1 + e1 * e1 * e1 * (Math.sin(6 * mu) * 151 / 96 + e1 * Math.sin(8 * mu) * 1097 / 512);
-        C1 = e0sq * Math.pow(Math.cos(phi1), 2)
-        T1 = Math.pow(Math.tan(phi1), 2)
-        N1 = self.a / Math.sqrt(1 - Math.pow(self.e * Math.sin(phi1), 2))
-        R1 = N1 * (1 - Math.pow(self.e, 2)) / (1 - Math.pow(self.e * Math.sin(phi1), 2))
+        C1 = e0sq * Math.cos(phi1)**2
+        T1 = Math.tan(phi1)**2
+        N1 = self.a / Math.sqrt(1 - (self.e * Math.sin(phi1))**2)
+        R1 = N1 * (1 - self.e**2) / (1 - (self.e * Math.sin(phi1))**2)
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
-        phi = phi + Math.pow(D, 6) * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720;        }
+        phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720;        }
         phi = phi1 - (N1 * Math.tan(phi1) / R1) * phi
         lat = Math.floor(1000000 * phi / self.drad) / 1000000        }
 
