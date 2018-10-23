@@ -2,39 +2,40 @@ from math import sqrt, sin, cos, tan, floor, pi
 
 
 class GeoCon:
-'''
-Main class
+    '''
+    Main class
 
-'''
-    #constants used in calculations
+    '''
+    # constants used in calculations
     k = 1
     k0 = 0.9996
     drad = pi / 180
     digraphLettersE = "ABCDEFGHJKLMNPQRSTUVWXYZ"
     digraphLettersN = "ABCDEFGHJKLMNPQRSTUV"
     digraphLettersAll = "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUV"
-    datumTable: [
-        { eqRad: 6378137.0, flat: 298.2572236 },    # WGS 84
-        { eqRad: 6378137.0, flat: 298.2572236 },    # NAD 83
-        { eqRad: 6378137.0, flat: 298.2572215 },    # GRS 80
-        { eqRad: 6378135.0, flat: 298.2597208 },    # WGS 72
-        { eqRad: 6378160.0, flat: 298.2497323 },    # Austrailian 1965
-        { eqRad: 6378245.0, flat: 298.2997381 },    # Krasovsky 1940
-        { eqRad: 6378206.4, flat: 294.9786982 },    # North American 1927
-        { eqRad: 6378388.0, flat: 296.9993621 },    # International 1924
-        { eqRad: 6378388.0, flat: 296.9993621 },    # Hayford 1909
-        { eqRad: 6378249.1, flat: 293.4660167 },    # Clarke 1880
-        { eqRad: 6378206.4, flat: 294.9786982 },    # Clarke 1866
-        { eqRad: 6377563.4, flat: 299.3247788 },    # Airy 1830
-        { eqRad: 6377397.2, flat: 299.1527052 },    # Bessel 1841
-        { eqRad: 6377276.3, flat: 300.8021499 }     # Everest 1830
+    datumTable = [
+        {eqRad: 6378137.0, flat: 298.2572236},    # WGS 84
+        {eqRad: 6378137.0, flat: 298.2572236},    # NAD 83
+        {eqRad: 6378137.0, flat: 298.2572215},    # GRS 80
+        {eqRad: 6378135.0, flat: 298.2597208},    # WGS 72
+        {eqRad: 6378160.0, flat: 298.2497323},    # Austrailian 1965
+        {eqRad: 6378245.0, flat: 298.2997381},    # Krasovsky 1940
+        {eqRad: 6378206.4, flat: 294.9786982},    # North American 1927
+        {eqRad: 6378388.0, flat: 296.9993621},    # International 1924
+        {eqRad: 6378388.0, flat: 296.9993621},    # Hayford 1909
+        {eqRad: 6378249.1, flat: 293.4660167},    # Clarke 1880
+        {eqRad: 6378206.4, flat: 294.9786982},    # Clarke 1866
+        {eqRad: 6377563.4, flat: 299.3247788},    # Airy 1830
+        {eqRad: 6377397.2, flat: 299.1527052},    # Bessel 1841
+        {eqRad: 6377276.3, flat: 300.8021499}     # Everest 1830
     ]
 
 
     def __init__(self):
         '''
+        Constructor
         '''
-        #constants taken from or calculated from the datum
+        # constants taken from or calculated from the datum
         self.a = 0   # equatorial radius in meters
         self.f = 0   # polar flattening
         self.b = 0   # polar radius in meters
@@ -71,22 +72,25 @@ Main class
         this function assumes that all data validation has been performed prior to calling
         it.
         '''
-        phi = lat * self.drad                              # convert latitude to radians
-        lng = lngd * self.drad                             # convert longitude to radians
-        utmz = 1 + floor((lngd + 180) / 6)            # longitude to utm zone
-        zcm = 3 + 6 * (utmz - 1) - 180                     # central meridian of a zone
-        latz = 0                                           # this gives us zone A-B for below 80S
+        phi = lat * self.drad                           # convert latitude to radians
+        lng = lngd * self.drad                          # convert longitude to radians
+        utmz = 1 + floor((lngd + 180) / 6)              # longitude to utm zone
+        zcm = 3 + 6 * (utmz - 1) - 180                  # central meridian of a zone
+        latz = 0                                        # this gives us zone A-B for below 80S
         esq = (1 - (self.b / self.a) * (self.b / self.a))
         e0sq = self.e * self.e / (1 - self.e**2)
         M = 0
 
         # convert latitude to latitude zone for nato
         # zones C-W in this range
-        if (lat > -80 and lat < 72): latz = floor((lat + 80) / 8) + 2
+        if (lat > -80 and lat < 72):
+            latz = floor((lat + 80) / 8) + 2
         # zone X
-        elif (lat > 72 and lat < 84): latz = 21
+        elif (lat > 72 and lat < 84):
+            latz = 21
         # zone Y-Z
-        elif (lat > 84): latz = 23
+        elif (lat > 84):
+            latz = 23
 
         N = self.a / sqrt(1 - (self.e * sin(phi))**2)
         T = tan(phi)**2
@@ -105,12 +109,13 @@ Main class
         # now we are ready to calculate the UTM values...
         # first the easting
         x = self.k0 * N * A * (1 + A * A * ((1 - T + C) / 6 + A * A * (5 - 18 * T + T * T + 72 * C - 58 * e0sq) / 120)) #Easting relative to CM
-        x = x + 500000 # standard easting
+        x = x + 500000  # standard easting
 
         # now the northing
         y = self.k0 * (M - M0 + N * tan(phi) * (A * A * (1 / 2 + A * A * ((5 - T + 9 * C + 4 * C * C) / 24 + A * A * (61 - 58 * T + T * T + 600 * C - 330 * e0sq) / 720))))   # first from the equator
-        yg = y + 10000000  #yg = y global, from S. Pole
-        if (y < 0): y = 10000000 + y   # add in false northing if south of the equator
+        yg = y + 10000000  # yg = y global, from S. Pole
+        if (y < 0):
+            y = 10000000 + y   # add in false northing if south of the equator
 
         digraph = self.makeDigraph(x, y, utmz)
         rv = {
@@ -152,8 +157,10 @@ Main class
         M0 = 0
         M = 0
 
-        if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
-        else: M = M0 + (y - 10000000) / self.k
+        if (not southern):
+            M = M0 + y / self.k0    # Arc length along standard meridian.
+        else:
+            M = M0 + (y - 10000000) / self.k
 
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
         phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu)   #Footprint Latitude
@@ -171,7 +178,7 @@ Main class
         lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / cos(phi1)
         lng = lngd = zcm + lng / self.drad
 
-        return { lat: lat, lng: lng }
+        return {lat: lat, lng: lng}
 
 
 
@@ -191,6 +198,7 @@ Main class
         '''
         coords = self.natoToUtm(utme, utmn, utmz, latz, digraph)
         return self.utmToLatLng(coords.easting, coords.northing, coords.zone, coords.southern)
+
 
 
 
@@ -225,7 +233,8 @@ Main class
         eidx = self.digraphLettersE.indexOf(eltr)
         nidx = self.digraphLettersN.indexOf(nltr)
 
-        if (utmz / 2 == floor(utmz / 2)): nidx -= 5  # correction for even numbered zones
+        if (utmz / 2 == floor(utmz / 2)):
+            nidx -= 5  # correction for even numbered zones
 
         ebase = 100000*(1 + eidx - 8 * floor(eidx / 8))
 
@@ -254,12 +263,14 @@ Main class
 
         x = ebase + utme
         y = nbase + utmn
-        if (y > 10000000): y = y - 10000000
-        if (nbase >= 10000000): y = nbase + utmn - 10000000
+        if (y > 10000000):
+            y = y - 10000000
+        if (nbase >= 10000000):
+            y = nbase + utmn - 10000000
 
         southern = nbase < 10000000
 
-        return { northing: y, easting: x, zone: utmz, southern: southern }
+        return {northing: y, easting: x, zone: utmz, southern: southern}
 
 
 
@@ -281,8 +292,10 @@ Main class
         e1 = (1 - sqrt(1 - self.e**2)) / (1 + sqrt(1 - self.e**2))
         M0 = 0
 
-        if (not southern): M = M0 + y / self.k0    # Arc length along standard meridian.
-        else: M = M0 + (y - 10000000) / self.k
+        if (not southern):
+            M = M0 + y / self.k0    # Arc length along standard meridian.
+        else:
+            M = M0 + (y - 10000000) / self.k
 
         # calculate the latitude so that we can derive the latitude zone
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
@@ -314,6 +327,7 @@ Main class
             lngZone: utmz,
             digraph: digraph
         }
+
 
 
 
