@@ -118,18 +118,18 @@ class GeoCon:
 
         digraph = self.makeDigraph(x, y, utmz)
         rv = {
-            standard: {
-                easting: round(10*(x))/10,
-                northing: round(10*y)/10,
-                zone: utmz,
-                southern: phi < 0
+            'standard': {
+                'easting': round(10*(x))/10,
+                'northing': round(10*y)/10,
+                'zone': utmz,
+                'southern': phi < 0
             },
-            nato: {
-                easting: round(10*(x-100000*floor(x/100000)))/10,
-                northing: round(10*(y-100000*floor(y/100000)))/10,
-                latZone: self.digraphLettersN[latz],
-                lngZone: utmz,
-                digraph: digraph
+            'nato': {
+                'easting': round(10*(x-100000*floor(x/100000)))/10,
+                'northing': round(10*(y-100000*floor(y/100000)))/10,
+                'latZone': self.digraphLettersN[latz],
+                'lngZone': utmz,
+                'digraph': digraph
             }
         }
 
@@ -177,7 +177,10 @@ class GeoCon:
         lng = D * (1 + D * D * ((-1 - 2 * T1 - C1) / 6 + D * D * (5 - 2 * C1 + 28 * T1 - 3 * C1 * C1 + 8 * e0sq + 24 * T1 * T1) / 120)) / cos(phi1)
         lng = lngd = zcm + lng / self.drad
 
-        return {lat: lat, lng: lng}
+        return {
+            'lat': lat,
+            'lng': lng
+        }
 
 
 
@@ -224,10 +227,10 @@ class GeoCon:
 
         # make sure the digraph is consistent
         if (nltr == "I" or eltr == "O"):
-            throw "I and O are not legal digraph characters"
+            raise ValueError("I and O are not legal digraph characters")
 
         if (nltr == "W" or nltr == "X" or nltr == "Y" or nltr == "Z"):
-            throw "W, X, Y and Z are not legal second characters in a digraph"
+            raise ValueError("W, X, Y and Z are not legal second characters in a digraph")
 
         eidx = self.digraphLettersE.indexOf(eltr)
         nidx = self.digraphLettersN.indexOf(nltr)
@@ -269,7 +272,12 @@ class GeoCon:
 
         southern = nbase < 10000000
 
-        return {northing: y, easting: x, zone: utmz, southern: southern}
+        return {
+            'northing': y,
+            'easting': x,
+            'zone': utmz,
+            'southern': southern
+        }
 
 
 
@@ -298,33 +306,36 @@ class GeoCon:
 
         # calculate the latitude so that we can derive the latitude zone
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
-        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu);   //Footprint Latitude
-        phi1 = phi1 + e1 * e1 * e1 * (sin(6 * mu) * 151 / 96 + e1 * sin(8 * mu) * 1097 / 512);
+        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu)  # Footprint Latitude
+        phi1 = phi1 + e1 * e1 * e1 * (sin(6 * mu) * 151 / 96 + e1 * sin(8 * mu) * 1097 / 512)
         C1 = e0sq * cos(phi1)**2
         T1 = tan(phi1)**2
         N1 = self.a / sqrt(1 - (self.e * sin(phi1))**2)
         R1 = N1 * (1 - self.e**2) / (1 - (self.e * sin(phi1))**2)
         D = (x - 500000) / (N1 * self.k0)
         phi = (D * D) * (1 / 2 - D * D * (5 + 3 * T1 + 10 * C1 - 4 * C1 * C1 - 9 * e0sq) / 24)
-        phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720;        }
+        phi = phi + D**6 * (61 + 90 * T1 + 298 * C1 + 45 * T1 * T1 - 252 * e0sq - 3 * C1 * C1) / 720
         phi = phi1 - (N1 * tan(phi1) / R1) * phi
-        lat = floor(1000000 * phi / self.drad) / 1000000        }
+        lat = floor(1000000 * phi / self.drad) / 1000000
 
         # convert latitude to latitude zone for NATO
-        if (lat > -80 and lat < 72): latz = floor((lat + 80) / 8) + 2;  # zones C-W in this range
-        elif (lat > 72 and lat < 84): latz = 21;                        # zone X
-        elif (lat > 84): latz = 23;                                     # zone Y-Z
+        if (lat > -80 and lat < 72):            # zones C-W in this range
+            latz = floor((lat + 80) / 8) + 2
+        elif (lat > 72 and lat < 84):           # zone X
+            latz = 21
+        elif (lat > 84):                        # zone Y-Z
+            latz = 23
 
         digraph = self.makeDigraph(x, y, utmz)
         x = round(10 * (x - 100000 * floor(x / 100000))) / 10
         y = round(10 * (y - 100000 * floor(y / 100000))) / 10
 
         return {
-            easting: x,
-            northing: y,
-            latZone: self.digraphLettersN[latz],
-            lngZone: utmz,
-            digraph: digraph
+            'easting': x,
+            'northing': y,
+            'latZone': self.digraphLettersN[latz],
+            'lngZone': utmz,
+            'digraph': digraph
         }
 
 
