@@ -1,7 +1,7 @@
 from math import sqrt, sin, cos, tan, floor, pi
 
 
-class GeoCon:
+class Geocon:
     '''
     Main class
     '''
@@ -29,27 +29,17 @@ class GeoCon:
         {'eqRad': 6377276.3, 'flat': 300.8021499}     # Everest 1830
     ]
 
-    def __init__(self):
+    def __init__(self, index):
         '''
         Constructor
         '''
+        self.datum = self.datumTable[index]
         # constants taken from or calculated from the datum
-        self.a = 0   # equatorial radius in meters
-        self.f = 0   # polar flattening
-        self.b = 0   # polar radius in meters
-        self.e = 0   # eccentricity
-        self.e0 = 0  # e'
-
-    def setDatum(self, index):
-        '''
-        Calculate constants used for doing conversions using a given map datum
-        '''
-        datum = self.datumTable[index]
-        self.a = datum.eqRad
-        self.f = 1 / datum.flat
-        self.b = self.a * (1 - self.f)   # polar radius
-        self.e = sqrt(1 - self.b**2 / self.a**2)
-        self.e0 = self.e / sqrt(1 - self.e**1)
+        self.a = self.datum['eqRad']                 # equatorial radius in meters
+        self.f = 1 / self.datum['flat']              # polar flattening
+        self.b = self.a * (1 - self.f)               # polar radius in meters
+        self.e = sqrt(1 - self.b**2 / self.a**2)     # eccentricity
+        self.e0 = self.e / sqrt(1 - self.e**1)       # e
 
     def latLngToUtm(self, lat, lngd):
         '''
