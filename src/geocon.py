@@ -4,7 +4,6 @@ from math import sqrt, sin, cos, tan, floor, pi
 class GeoCon:
     '''
     Main class
-
     '''
     # constants used in calculations
     k = 1
@@ -61,11 +60,11 @@ class GeoCon:
 
     def latLngToUtm(self, lat, lngd):
         '''
-        Given a lat/lng pair, returns both global UTM and NATO UTM in the
+        Given a lat/lng pair, returns both standard UTM and NATO UTM in the
         following form:
         utm:
             {
-                global: { northing: n, easting: e, zone: z, southern: x },
+                standard: { northing: n, easting: e, zone: z, southern: x },
                 nato: { northing: n, easting: e, latzone: z0, lngzone: z1, digraph: xx }
             }
 
@@ -119,7 +118,7 @@ class GeoCon:
 
         digraph = self.makeDigraph(x, y, utmz)
         rv = {
-            global: {
+            standard: {
                 easting: round(10*(x))/10,
                 northing: round(10*y)/10,
                 zone: utmz,
