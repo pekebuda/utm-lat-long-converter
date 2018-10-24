@@ -1,0 +1,13 @@
+[
+  {"alias": "Madrid", "latitude": 40.4167, "longitude": -3.70325, "southern": false, "zone": 30, "easting": 440337, "northing": 4474245.9},
+  {"alias": "Buenos Aires", "latitude": -34.6083, "longitude": -58.3712, "southern": true, "zone": 21, "easting": 374278.1, "northing": 6169539},
+  {"alias": "Pekin", "latitude": 39.9035, "longitude": 116.388, "southern": false, "zone": 50, "easting":447686.2, "northing": 4417226},
+  {"alias": "Tokio", "latitude": 35.6894, "longitude": 139.692, "southern": false, "zone": 54, "easting": 381649.2, "northing": 3950287.5},
+  {"alias": "Washington", "latitude": 38.9041, "longitude": -77.0171, "southern": false, "zone": 18, "easting": 325092.5, "northing": 4308068.5},
+  {"alias": "Canberra", "latitude": -35.3081, "longitude": 149.124, "southern": true, "zone": 55, "easting": 693104, "northing": 6090719.7},
+  {"alias": "Otawa", "latitude": 45.4208, "longitude": -75.69, "southern": false, "zone": 18, "easting": 446017, "northing": 5029929.2},
+  {"alias": "Nueva Delhi", "latitude": 28.61, "longitude": 77.23, "southern": false, "zone": 43, "easting": 718042.1, "northing": 3166810.7},
+  {"alias": "Lima", "latitude": -34.6083, "longitude": -58.3712, "southern": true, "zone": 21, "easting": 374278.1, "northing": 6169539},
+  {"alias": "Caracas", "latitude": 10.491, "longitude": -66.902, "southern": false, "zone": 19, "easting": 729626, "northing": 1160465.7},
+  {"alias": "Manila", "latitude": 14.6006, "longitude": 120.982, "southern": false, "zone": 51, "easting": 282613, "northing": 1615116.7}
+]
