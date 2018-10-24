@@ -19,7 +19,12 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
     ],
-    packages=find_packages(),
+    package_dir={
+        'geocon': 'lib'
+    },
+    packages=[
+        'geocon'
+    ],
     install_requires=[],
     entry_points={
         'console_scripts': [],  # <name>=<package>:<function>
