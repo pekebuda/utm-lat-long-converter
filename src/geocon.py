@@ -13,22 +13,21 @@ class GeoCon:
     digraphLettersN = "ABCDEFGHJKLMNPQRSTUV"
     digraphLettersAll = "ABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUVABCDEFGHJKLMNPQRSTUV"
     datumTable = [
-        {eqRad: 6378137.0, flat: 298.2572236},    # WGS 84
-        {eqRad: 6378137.0, flat: 298.2572236},    # NAD 83
-        {eqRad: 6378137.0, flat: 298.2572215},    # GRS 80
-        {eqRad: 6378135.0, flat: 298.2597208},    # WGS 72
-        {eqRad: 6378160.0, flat: 298.2497323},    # Austrailian 1965
-        {eqRad: 6378245.0, flat: 298.2997381},    # Krasovsky 1940
-        {eqRad: 6378206.4, flat: 294.9786982},    # North American 1927
-        {eqRad: 6378388.0, flat: 296.9993621},    # International 1924
-        {eqRad: 6378388.0, flat: 296.9993621},    # Hayford 1909
-        {eqRad: 6378249.1, flat: 293.4660167},    # Clarke 1880
-        {eqRad: 6378206.4, flat: 294.9786982},    # Clarke 1866
-        {eqRad: 6377563.4, flat: 299.3247788},    # Airy 1830
-        {eqRad: 6377397.2, flat: 299.1527052},    # Bessel 1841
-        {eqRad: 6377276.3, flat: 300.8021499}     # Everest 1830
+        {'eqRad': 6378137.0, 'flat': 298.2572236},    # WGS 84
+        {'eqRad': 6378137.0, 'flat': 298.2572236},    # NAD 83
+        {'eqRad': 6378137.0, 'flat': 298.2572215},    # GRS 80
+        {'eqRad': 6378135.0, 'flat': 298.2597208},    # WGS 72
+        {'eqRad': 6378160.0, 'flat': 298.2497323},    # Austrailian 1965
+        {'eqRad': 6378245.0, 'flat': 298.2997381},    # Krasovsky 1940
+        {'eqRad': 6378206.4, 'flat': 294.9786982},    # North American 1927
+        {'eqRad': 6378388.0, 'flat': 296.9993621},    # International 1924
+        {'eqRad': 6378388.0, 'flat': 296.9993621},    # Hayford 1909
+        {'eqRad': 6378249.1, 'flat': 293.4660167},    # Clarke 1880
+        {'eqRad': 6378206.4, 'flat': 294.9786982},    # Clarke 1866
+        {'eqRad': 6377563.4, 'flat': 299.3247788},    # Airy 1830
+        {'eqRad': 6377397.2, 'flat': 299.1527052},    # Bessel 1841
+        {'eqRad': 6377276.3, 'flat': 300.8021499}     # Everest 1830
     ]
-
 
     def __init__(self):
         '''
@@ -41,9 +40,6 @@ class GeoCon:
         self.e = 0   # eccentricity
         self.e0 = 0  # e'
 
-
-
-
     def setDatum(self, index):
         '''
         Calculate constants used for doing conversions using a given map datum
@@ -54,9 +50,6 @@ class GeoCon:
         self.b = self.a * (1 - self.f)   # polar radius
         self.e = sqrt(1 - self.b**2 / self.a**2)
         self.e0 = self.e / sqrt(1 - self.e**1)
-
-
-
 
     def latLngToUtm(self, lat, lngd):
         '''
@@ -101,13 +94,13 @@ class GeoCon:
         M = M - sin(2 * phi) * (esq * (3 / 8 + esq * (3 / 32 + 45 * esq / 1024)))
         M = M + sin(4 * phi) * (esq * esq * (15 / 256 + esq * 45 / 1024))
         M = M - sin(6 * phi) * (esq * esq * esq * (35 / 3072))
-        M = M * self.a                                     #Arc length along standard meridian
+        M = M * self.a  # Arc length along standard meridian
 
         M0 = 0   # if another point of origin is used than the equator
 
         # now we are ready to calculate the UTM values...
         # first the easting
-        x = self.k0 * N * A * (1 + A * A * ((1 - T + C) / 6 + A * A * (5 - 18 * T + T * T + 72 * C - 58 * e0sq) / 120)) #Easting relative to CM
+        x = self.k0 * N * A * (1 + A * A * ((1 - T + C) / 6 + A * A * (5 - 18 * T + T * T + 72 * C - 58 * e0sq) / 120))  # Easting relative to CM
         x = x + 500000  # standard easting
 
         # now the northing
@@ -135,9 +128,6 @@ class GeoCon:
 
         return rv
 
-
-
-
     def utmToLatLng(self, x, y, utmz, southern):
         '''
         Convert a set of global UTM coordinates to lat/lng returned as follows
@@ -162,7 +152,7 @@ class GeoCon:
             M = M0 + (y - 10000000) / self.k
 
         mu = M / (self.a * (1 - esq * (1 / 4 + esq * (3 / 64 + 5 * esq / 256))))
-        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu)   #Footprint Latitude
+        phi1 = mu + e1 * (3 / 2 - 27 * e1 * e1 / 32) * sin(2 * mu) + e1 * e1 * (21 / 16 - 55 * e1 * e1 / 32) * sin(4 * mu)   # Footprint Latitude
         phi1 = phi1 + e1 * e1 * e1 * (sin(6 * mu) * 151 / 96 + e1 * sin(8 * mu) * 1097 / 512)
         C1 = e0sq * cos(phi1)**2
         T1 = tan(phi1)**2
@@ -182,9 +172,6 @@ class GeoCon:
             'lng': lng
         }
 
-
-
-
     def natoToLatLng(self, utme, utmn, utmz, latz, digraph):
         '''
         takes a set of NATO style UTM coordinates and converts them to a lat/lng
@@ -200,9 +187,6 @@ class GeoCon:
         '''
         coords = self.natoToUtm(utme, utmn, utmz, latz, digraph)
         return self.utmToLatLng(coords.easting, coords.northing, coords.zone, coords.southern)
-
-
-
 
     def natoToUtm(self, utme, utmn, utmz, latz, digraph):
         '''
@@ -279,9 +263,6 @@ class GeoCon:
             'southern': southern
         }
 
-
-
-
     def utmToNato(self, x, y, utmz, southern):
         '''
         Returns a set of nato coordinates from a set of global UTM coordinates
@@ -338,10 +319,7 @@ class GeoCon:
             'digraph': digraph
         }
 
-
-
-
-    def makeDigraph(x, y, utmz):
+    def makeDigraph(self, x, y, utmz):
         '''
         Create a NATO grid digraph.
 
@@ -356,7 +334,8 @@ class GeoCon:
         digraph = self.digraphLettersE.charAt(letter)
 
         letter = floor(y / 100000)
-        if (utmz / 2 == floor(utmz / 2)): letter = letter + 5
+        if (utmz / 2 == floor(utmz / 2)):
+            letter = letter + 5
         letter = letter - 20 * floor(letter / 20)
         digraph = digraph + self.digraphLettersN.charAt(letter)
 
